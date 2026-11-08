@@ -44,4 +44,4 @@ int main()
     }
 
     return 0;
-}
+} //this is the main idea behind the working of this website, I uses C++ to simulate and translate onto JS
