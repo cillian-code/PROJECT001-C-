@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Academic Analytics & CGPA Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">🎓</div>
+                <div>
+                    <h1>Student Academic Hub</h1>
+                    <p class="subtitle">Marks Analytics & Cumulative Grade Point Average (CGPA) Calculator</p>
+                </div>
+            </div>
+            <button id="themeToggle" class="btn btn-secondary btn-icon" aria-label="Toggle Theme">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="marksSection">📊 Section 1: Marks Analytics</button>
+            <button class="tab-btn" data-tab="cgpaSection">🎓 Section 2: CGPA Calculator</button>
+        </nav>
+
+        <!-- ==========================================
+             SECTION 1: MARKS & AVERAGE ANALYTICS
+             ========================================== -->
+        <div id="marksSection" class="tab-content active">
+            <!-- Stats Overview Row -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon icon-blue">👥</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Students</span>
+                        <h3 id="statTotalStudents">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-green">📈</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Class Average</span>
+                        <h3 id="statClassAverage">0.00</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-purple">🏆</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Top Performer</span>
+                        <h3 id="statTopPerformer">N/A</h3>
+                    </div>
+                </div>
+            </section>
+
+            <main class="main-content">
+                <!-- Left Panel: Input Form -->
+                <section class="card form-card">
+                    <h2>Add Student Marks</h2>
+                    <p class="form-desc">Simulates the C++ <code>stringstream</code> logic for line parsing.</p>
+                    
+                    <form id="marksForm">
+                        <div class="form-group">
+                            <label for="studentName">Student Name</label>
+                            <input type="text" id="studentName" placeholder="e.g. Jane Doe" required autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rawMarks">
+                                Marks Input
+                                <span class="label-help">(separated by spaces or commas)</span>
+                            </label>
+                            <input type="text" id="rawMarks" placeholder="e.g. 85.5 90 78.5 92" required autocomplete="off">
+                        </div>
+
+                        <!-- Live Input Preview -->
+                        <div id="livePreview" class="live-preview hidden">
+                            <div class="preview-header">Parsed Marks:</div>
+                            <div id="previewPills" class="pills-container"></div>
+                            <div class="preview-stats">
+                                <span>Count: <strong id="previewCount">0</strong></span>
+                                <span>Total: <strong id="previewTotal">0.00</strong></span>
+                                <span>Average: <strong id="previewAvg">0.00</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">➕ Add Record</button>
+                            <button type="button" id="btnPresets" class="btn btn-secondary">⚡ Load Sample Data</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Right Panel: Student List Table -->
+                <section class="card table-card">
+                    <div class="table-header-toolbar">
+                        <h2>Student Records</h2>
+                        <div class="toolbar-controls">
+                            <input type="text" id="searchInput" placeholder="Search student..." class="search-input">
+                            <select id="sortSelect" class="sort-select">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="name">Name (A-Z)</option>
+                                <option value="avgDesc">Average (High → Low)</option>
+                                <option value="avgAsc">Average (Low → High)</option>
+                            </select>
+                            <button id="btnExport" class="btn btn-outline" title="Export to CSV">📥 CSV</button>
+                            <button id="btnClearAll" class="btn btn-danger-outline" title="Clear all records">🗑️ Clear</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Parsed Marks</th>
+                                    <th>Total</th>
+                                    <th>Average</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentTableBody">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- ==========================================
+             SECTION 2: CGPA & GRADE CALCULATOR
+             ========================================== -->
+        <div id="cgpaSection" class="tab-content">
+            <!-- Stats Overview Row for CGPA -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon icon-purple">🎓</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Overall CGPA</span>
+                        <h3 id="cgpaDisplay">0.00</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-blue">📚</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Credit Hours</span>
+                        <h3 id="totalCreditsDisplay">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-green">🏅</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Academic Standing</span>
+                        <h3 id="honorsDisplay">N/A</h3>
+                    </div>
+                </div>
+            </section>
+
+            <main class="main-content">
+                <!-- Left Panel: CGPA Course Entry Form -->
+                <section class="card form-card">
+                    <h2>Calculate CGPA</h2>
+                    <p class="form-desc">Select letter grades and credit hours per course.</p>
+
+                    <!-- Previous Cumulative CGPA (Optional) -->
+                    <div class="form-group border-box">
+                        <label>Prior Semesters (Optional)</label>
+                        <div class="inline-inputs">
+                            <div>
+                                <span class="label-help">Prior CGPA</span>
+                                <input type="number" id="priorCgpa" step="0.01" min="0" max="4.0" placeholder="e.g. 3.50">
+                            </div>
+                            <div>
+                                <span class="label-help">Prior Total Credits</span>
+                                <input type="number" id="priorCredits" step="1" min="0" placeholder="e.g. 30">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Course Rows Container -->
+                    <div class="courses-header">
+                        <label>Current Semester Courses</label>
+                        <button type="button" id="btnAddCourse" class="btn btn-sm btn-outline">➕ Add Course</button>
+                    </div>
+
+                    <div id="courseRowsContainer" class="course-rows">
+                        <!-- Dynamic rows injected here -->
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="btnCalculateCgpa" class="btn btn-primary">🧮 Compute CGPA</button>
+                        <button type="button" id="btnResetCgpa" class="btn btn-secondary">🔄 Reset Courses</button>
+                    </div>
+                </section>
+
+                <!-- Right Panel: Saved CGPA Reports & Reference Scale -->
+                <section class="card table-card">
+                    <div class="table-header-toolbar">
+                        <h2>Grade Breakdown & Scale Reference</h2>
+                        <button id="btnExportCgpa" class="btn btn-outline" title="Export CGPA Summary">📥 Export CGPA</button>
+                    </div>
+
+                    <!-- Live Grade Summary Table -->
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Course Code/Name</th>
+                                    <th>Grade</th>
+                                    <th>Grade Points</th>
+                                    <th>Credits</th>
+                                    <th>Total Points</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cgpaSummaryTableBody">
+                                <tr>
+                                    <td colspan="5" class="empty-state">No courses added yet. Add courses on the left to calculate!</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Standard 4.0 Grading Scale Reference -->
+                    <div class="scale-reference-card">
+                        <h3>4.0 Grading Scale Reference</h3>
+                        <div class="scale-grid">
+                            <span class="scale-pill"><b>A</b> = 4.00 (80-100%)</span>
+                            <span class="scale-pill"><b>A-</b> = 3.75 (75-79%)</span>
+                            <span class="scale-pill"><b>B+</b> = 3.50 (70-74%)</span>
+                            <span class="scale-pill"><b>B</b> = 3.00 (65-69%)</span>
+                            <span class="scale-pill"><b>B-</b> = 2.75 (60-64%)</span>
+                            <span class="scale-pill"><b>C+</b> = 2.50 (55-59%)</span>
+                            <span class="scale-pill"><b>C</b> = 2.00 (50-54%)</span>
+                            <span class="scale-pill"><b>D</b> = 1.00 (40-49%)</span>
+                            <span class="scale-pill"><b>F</b> = 0.00 (0-39%)</span>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
